@@ -24,6 +24,10 @@
             justify-content: center;
             align-items: center;
         }
+        .message {
+            font-size: large;
+            font-family: Arial, Helvetica, sans-serif;
+        }
     </style>
     <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
 </head>
@@ -47,7 +51,7 @@
             let message = ref('')
             const address = ref('')
             const testing = false            
-            
+
             // recycling only T-F
             const weekInits = {
                 "Week A": {
@@ -136,8 +140,8 @@
                     let week = 'Week A'
                     let weekInit = weekInits[week]
                     let today = new Date()
-                    nextRecyclingWeek(today, weekInit)
-                    // message.value = `Recycling is ${weekInits[week]} for ${week}`
+                    // nextRecyclingWeek(today, weekInit)
+                    message.value = `You are on ${week} for Recycling`
                 } else {
                     console.warn("something went wrong")
                 }
@@ -174,7 +178,7 @@
             <input v-model="address" @keyup.enter="checkRecylingWeek"></input>
             <button :disabled="address === '' || address.length < 6" @click="checkRecylingWeek">Is recyling this week?</button>
         </div>
-        <div id="message">{{ message }}</div>
+        <div id="message" class="message">{{ message }}</div>
     </div>
     
 </body>
