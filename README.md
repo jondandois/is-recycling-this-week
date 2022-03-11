@@ -2,11 +2,17 @@
 a little app to help answer the question of whether to put out recycling this week for Baltimore City residents.
 
 ## TODO
-- initialize Vue
-- MD iMap Geocoder
-- pull down A-B weeks GeoJSON
-- turf js intersect or vanilla intersect?
+- ~initialize Vue~
+- ~MD iMap Geocoder~
+- ~pull down A-B weeks GeoJSON~
+- ~turf js intersect or vanilla intersect?~
+- is current week a recycling week?
+- styling
+- DPW link body
+- "About"body
+- footer attribte
 - geocode de-bounce cookie?
+
 
 
 ## Geocoder
