@@ -136,8 +136,8 @@
             function reportOnWeek(week_feature) {
                 // update the display for the users week relative to today
                 if (week_feature) {
-                    // let week = week_feature.properties?.['Week']
-                    let week = 'Week A'
+                    let week = week_feature.properties?.['Week']
+                    // let week = 'Week A'
                     let weekInit = weekInits[week]
                     let today = new Date()
                     // nextRecyclingWeek(today, weekInit)
