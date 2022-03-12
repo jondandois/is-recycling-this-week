@@ -5,30 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Is Recycling This Week?</title>
-    <style>
-        body {
-            background-color: lightslategray;
-        }
-        input {
-            font-size: large;
-            /* width: 50%; */
-        }
-        button {
-            font-size: large;
-            border-radius: 4px;
-        }
-        .center {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .message {
-            font-size: large;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
     <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
 </head>
 <body>
@@ -39,148 +16,27 @@
             }
         }
     </script>
-    
+
     <script type="module">
-        import { createApp, ref } from 'vue'
-        import RecyclingWeeksData from "./dpw-recycling-weeks.geojson" assert {type: 'json'}
-        
-        createApp({
-
-          setup() {
-            let recylingData = RecyclingWeeksData
-            let message = ref('')
-            const address = ref('')
-            const testing = false            
-
-            // recycling only T-F
-            const weekInits = {
-                "Week A": {
-                    "start": new Date("3/1/2022"),
-                    "stop": new Date("3/4/2022")
-                },
-                "Week B": {
-                    "start": new Date("3/8/2022"),
-                    "stop": new Date("3/11/2022")
-                }
-            }
-            
-            const geocoderURL = "https://geodata.md.gov/imap/rest/services/GeocodeServices/MD_CompositeLocator/GeocodeServer/findAddressCandidates"
-            let payload = {
-                "SingleLine": "",
-                "f": "json",
-                "outFields": "*",
-                "outSR": 4326,
-                "maxLocations": 2
-            }
-            function checkRecylingWeek() {
-                if (address.value) {
-                    // console.log("address:", address.value)
-                    payload.SingleLine = address.value
-                    let params = new URLSearchParams(payload)
-                    // console.log(params.toString())
-                    let url = geocoderURL + "?" + params.toString()
-                    // unwrap this testing code for production
-                    if (testing){
-                        parseCandidates(JSON.parse(canned_response))
-                    } else {
-                        fetch(url)
-                            .then(response => response.json())
-                            .then(data => parseCandidates(data))
-                    }
-                } else {
-                    console.warn("no address provided")
-                    // how'd you get here?
-                }
-            }
-
-            function parseCandidates(data){
-                // parse out candidates if any
-                if (data.candidates?.length > 0){
-                    let candidates = data.candidates
-                    // console.log("have candidates!")
-                    // console.log(data.candidates)
-                    let first_candidate = data.candidates[0]
-                    if (first_candidate.attributes?.Score > 80) {
-                        // console.log(first_candidate.location)
-                        let week_feature = pointInPolygonWeek(first_candidate.location)
-                        reportOnWeek(week_feature)
-                    } else {
-                        console.warn("low accuracy geocode...")
-                        // prompt user to try again with more address parts
-                    }
-
-                } else {
-                    console.warn("No candidate data returned...")
-                    // prompt user to try again
-                }
-            }
-            function pointInPolygonWeek(location){
-                // return the polygon week for a point or none
-                let week_feature = {}
-                let pt = turf.point([location.x, location.y])
-                for (let polyF = 0; polyF < recylingData.features.length; polyF++) {
-                    const weekPolygon = recylingData.features[polyF];
-                    let poly = {}
-                    if (weekPolygon.geometry.type == "Polygon") {
-                        poly = turf.polygon(weekPolygon.geometry.coordinates)
-                    } else if (weekPolygon.geometry.type == "MultiPolygon") {
-                        poly = turf.multiPolygon(weekPolygon.geometry.coordinates)
-                    }
-                    if (turf.booleanPointInPolygon(pt, poly)) {
-                        week_feature = weekPolygon
-                    }
-                }
-                return week_feature
-            }
-
-            function reportOnWeek(week_feature) {
-                // update the display for the users week relative to today
-                if (week_feature) {
-                    let week = week_feature.properties?.['Week']
-                    // let week = 'Week A'
-                    let weekInit = weekInits[week]
-                    let today = new Date()
-                    // nextRecyclingWeek(today, weekInit)
-                    message.value = `You are on ${week} for Recycling`
-                } else {
-                    console.warn("something went wrong")
-                }
-
-            }
-
-            function nextRecyclingWeek(today, weekInit) {
-                // get the next recycling block relative to today for a week
-                if (today >= weekInit.start && today <= weekInit.stop ){
-                    console.log(today, weekInit.start, weekInit.stop)
-                    console.log("this IS your recycling week")
-                    if (today <= weekInit.stop) {
-                        console.log("TODAY is your recyling day! You might have missed them!")
-                    }
-                } else {
-                    console.log(today, weekInit.start, weekInit.stop)
-                    console.log("this IS NOT your recycling week")
-                    
-                }
-            }
-
-            return {
-              address,
-              message, 
-              checkRecylingWeek
-            }
-          }
-        }).mount('#app')
+        import { createApp } from "vue"
+        import CheckRecyclingWeek from "./check-recycling-week.js"
+        createApp(CheckRecyclingWeek).mount("#app")
+        document.getElementById("addressEntry").focus()
     </script>
-    
+
 
     <div id="app" class="center">
-        <div id="addressEntry">
-            <input v-model="address" @keyup.enter="checkRecylingWeek"></input>
+        <h2>Find out if its your Recycling Week in Baltimore City</h2>
+        <div>
+            <input id="addressEntry" autofocus placeholder="Enter address" aria-label="Enter address" v-model="address" @keyup.enter="checkRecylingWeek"></input>
             <button :disabled="address === '' || address.length < 6" @click="checkRecylingWeek">Is recyling this week?</button>
         </div>
-        <div id="message" class="message">{{ message }}</div>
+        <pre id="message" class="message" hidden><span v-html="message"></span></pre>
+        <br/>
+        <div id="footer"></div>
     </div>
-    
+
+
 </body>
 </html>
 
