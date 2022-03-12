@@ -1,7 +1,7 @@
 // check-recycling-week.js
 import { ref } from "vue"
 import RecyclingWeeksData from "./dpw-recycling-weeks.geojson" assert {type: 'json'}
-import SampleData from "./sample-data.js"
+// import SampleData from "./sample-data.js"
 export default {
     setup() {
         let recylingData = RecyclingWeeksData
