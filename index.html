@@ -26,7 +26,7 @@
 
 
     <div id="app" class="center">
-        <h2>Find out if its your Recycling Week in Baltimore City</h2>
+        <h2>Find out if it's your Recycling Week in Baltimore City</h2>
         <div>
             <input id="addressEntry" autofocus placeholder="Enter address" aria-label="Enter address" v-model="address" @keyup.enter="checkRecylingWeek"></input>
             <button :disabled="address === '' || address.length < 6" @click="checkRecylingWeek">Is recyling this week?</button>
