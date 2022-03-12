@@ -1,6 +1,8 @@
 # is-recycling-this-week
 a little app to help answer the question of whether to put out recycling this week for Baltimore City residents.
 
+View this app here: https://jondandois.github.io/is-recycling-this-week/
+
 ## TODO
 - ~initialize Vue~
 - ~MD iMap Geocoder~
@@ -21,7 +23,7 @@ This all works because of the geocoder. This one uses the MD iMap Geocoder servi
 - https://geodata.md.gov/imap/rest/services/GeocodeServices/MD_CompositeLocator/GeocodeServer/findAddressCandidates
 
 
-## Baltimore DPW Recycling A/B Week Map 
+## Baltimore DPW Recycling A/B Week Map
 Baltimore DPWs Recycling A/B Week Map is a available as an AGO app: https://baltimoredpw.maps.arcgis.com/apps/webappviewer/index.html?id=0036eb5707d6445fb3a5fef4565c3799
 https://publicworks.baltimorecity.gov/collectionupdate
 
