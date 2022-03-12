@@ -99,36 +99,50 @@ export default {
             if (week_feature) {
                 let week = week_feature.properties?.['Week']
                 let weekInit = weekInits[week]
-                let today = new Date()
-                setMessage(`You are on ${week} for Recycling`)
-                nextRecyclingWeek(today, weekInit)
+                let today = new Date().setHours(0,0,0,0)
+                let recycling_week = nextRecyclingWeek(today, weekInit)
+                let message = `<strong>This ${recycling_week.this_week ? "IS" : "IS NOT"} your reycling week!</strong>`
+                message += `\nYou are on <strong>${week}</strong> for Recycling`
+                message += `\nRegular recycling is <strong>${recycling_week.dates.start.toDateString()}</strong> to <strong>${recycling_week.dates.stop.toDateString()}</strong>`
+                message += `\nTo learn more about the City's current recycling\nvisit <a href="https://publicworks.baltimorecity.gov/collectionupdate">DPW's Collection Updates site</a> `
+                setMessage(message)
             } else {
                 // user may not be in the City
-                setMessage(`Looks like you may not live in Baltimore City\nMaybe you should: <a href="http://https://livebaltimore.com/">LiveBaltimore</a>`)
+                setMessage(`Looks like you may not live in Baltimore City\nMaybe you should: <a href="https://livebaltimore.com/">LiveBaltimore</a>`)
             }
 
         }
 
-        function updateDaterange(target, start, stop, inc){
+        function addDays(date, days) {
+            // add integer days to a date and return date
+            let result = new Date(date)
+            result.setDate(result.getDate() + days)
+            return result
+        }
+        function updateDaterange(target, weekInit, inc){
             // update the users initial week A/B date range to the current one
+            //tries to account for saturdays since technically there can be a saturday makeup in your week
+            while (target > addDays(weekInit.stop, 1)) {
+                weekInit.start = addDays(weekInit.start, inc)
+                weekInit.stop = addDays(weekInit.stop, inc)
+            }
+            return weekInit
         }
         function nextRecyclingWeek(today, weekInit) {
             // get the next recycling block relative to today for a week
-            /*
-                1. get the next recycle week relative to the current day
-
-            */
-            if (today >= weekInit.start && today <= weekInit.stop ){
-                console.log(today, weekInit.start, weekInit.stop)
-                console.log("this IS your recycling week")
-                if (today <= weekInit.stop) {
-                    console.log("TODAY is your recyling day! You might have missed them!")
-                }
-            } else {
-                console.log(today, weekInit.start, weekInit.stop)
-                console.log("this IS NOT your recycling week")
-
+            let recycling_week = {
+                "this_week": false, 
+                "dates": {}
             }
+           recycling_week.dates = updateDaterange(today, weekInit, 14)
+           let sunday = addDays(recycling_week.dates.start, -2)
+           let saturday = addDays(recycling_week.dates.stop, 1)
+            if (today >= sunday && today <= saturday ){
+                recycling_week.this_week = true
+            } else {
+                recycling_week.this_week = false
+            }
+            return recycling_week
         }
 
         function setMessage(new_message){
