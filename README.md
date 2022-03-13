@@ -1,9 +1,12 @@
 # is-recycling-this-week
+View this app here: https://jondandois.github.io/is-recycling-this-week/
+
 I wrote this app to help me remember if this week is my recycling week based on Baltimore City DPW's bi-weekly recycling system.
 
 I do not work for Baltimore City government or DPW and support our hard-working sanitation workers.
 
-View this app here: https://jondandois.github.io/is-recycling-this-week/
+I wrote this for fun. Refer to DPW's [Collection Updates site](https://publicworks.baltimorecity.gov/collectionupdate
+) for all official information about recycling and waste collection.
 
 ## Sources
 
