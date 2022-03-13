@@ -127,13 +127,12 @@ let CheckRecyclingWeek = {
         function checkForRemember() {
             // check for the users remembered address
             const rmCheck = document.getElementById("rememberMe")
-            const addressInput = document.getElementById("addressEntry")
             if (localStorage.address && localStorage.address !== "") {
                 rmCheck.setAttribute("checked", "checked")
                 address.value = localStorage.address
             } else {
                 rmCheck.removeAttribute("checked")
-                addressInput.value = ""
+                address.value = ""
             }
         }
 
@@ -142,7 +141,7 @@ let CheckRecyclingWeek = {
             const rmCheck = document.getElementById("rememberMe")
             if (rmCheck.checked && rmCheck.value !== ""){
                 localStorage.address = address.value
-                localStorage.checkbox = rmCheck.value
+                localStorage.checked = rmCheck.value
             } else {
                 localStorage.address = ""
                 localStorage.checked = ""
