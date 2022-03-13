@@ -1,21 +1,17 @@
 // check-recycling-week.js
-import { ref } from "vue"
-import RecyclingWeeksData from "./dpw-recycling-weeks.geojson" assert {type: 'json'}
-// import SampleData from "./sample-data.js"
-export default {
+let CheckRecyclingWeek = {
     setup() {
-        let recylingData = RecyclingWeeksData
-        let message = ref('')
-        let address = ref('')
+        let message = Vue.ref('')
+        let address = Vue.ref('')
         const testing = false
-        const test_cond = "week_a"
-        // const test_cond = "week_b"
+        // const test_cond = "week_a"
+        const test_cond = "week_b"
         // const test_cond = "not_in_city"
         // const test_cond = "low_acc"
         // const test_cond = "no_candidates"
         if (testing) {
             console.log("in test mode")
-            address = ref(SampleData[test_cond].address)
+            address = Vue.ref(SampleData[test_cond].address)
         }
 
 

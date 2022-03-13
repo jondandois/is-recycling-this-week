@@ -9,6 +9,7 @@ input {
 button {
     font-size: large;
     border-radius: 4px;
+    background-color: #EFEFEF;
 }
 .center {
     height: 100vh;

@@ -7,21 +7,20 @@
     <title>Is Recycling This Week?</title>
     <link rel="stylesheet" href="styles.css">
     <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+    <script src='https://unpkg.com/vue@3'></script>
+    <script src='./check-recycling-week.js'></script>
+    <!-- <script src='./sample-data.js'></script> -->
 </head>
 <body>
-    <script type="importmap">
-        {
-            "imports": {
-                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-            }
-        }
-    </script>
-
-    <script type="module">
-        import { createApp } from "vue"
-        import CheckRecyclingWeek from "./check-recycling-week.js"
-        createApp(CheckRecyclingWeek).mount("#app")
-        document.getElementById("addressEntry").focus()
+    <script>
+        fetch('./dpw-recycling-weeks.geojson')
+            .then(response => response.json())
+            .then(json => {
+                recylingData = json
+                console.log("got vue:", Vue)
+                Vue.createApp(CheckRecyclingWeek).mount("#app")
+                document.getElementById("addressEntry").focus()
+            })
     </script>
 
 
