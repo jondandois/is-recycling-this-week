@@ -3,17 +3,6 @@ let CheckRecyclingWeek = {
     setup() {
         let message = Vue.ref('')
         let address = Vue.ref('')
-        const testing = false
-        // const test_cond = "week_a"
-        const test_cond = "week_b"
-        // const test_cond = "not_in_city"
-        // const test_cond = "low_acc"
-        // const test_cond = "no_candidates"
-        if (testing) {
-            console.log("in test mode")
-            address = Vue.ref(SampleData[test_cond].address)
-        }
-
 
         // recycling only T-F
         const weekInits = {
@@ -40,14 +29,9 @@ let CheckRecyclingWeek = {
                 payload.SingleLine = address.value
                 let params = new URLSearchParams(payload)
                 let url = geocoderURL + "?" + params.toString()
-                // unwrap this testing code for production
-                if (testing){
-                    parseCandidates(JSON.parse(SampleData[test_cond].response))
-                } else {
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => parseCandidates(data))
-                }
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => parseCandidates(data))
             } else {
                 console.warn("no address provided")
                 setMessage(`No address provided\nPlease try again`)
@@ -99,14 +83,13 @@ let CheckRecyclingWeek = {
                 let recycling_week = nextRecyclingWeek(today, weekInit)
                 let message = `<strong>This ${recycling_week.this_week ? "IS" : "IS NOT"} your reycling week!</strong>`
                 message += `\nYou are on <strong>${week}</strong> for Recycling`
-                message += `\nRegular recycling is <strong>${recycling_week.dates.start.toDateString()}</strong> to <strong>${recycling_week.dates.stop.toDateString()}</strong>`
-                message += `\nTo learn more about the City's current recycling\nvisit <a href="https://publicworks.baltimorecity.gov/collectionupdate">DPW's Collection Updates site</a> `
+                message += `\nRegular recycling is:\n<strong>${recycling_week.dates.start.toDateString()}</strong> to <strong>${recycling_week.dates.stop.toDateString()}</strong>`
+                message += `\nLearn more about the City's recycling at\n <a href="https://publicworks.baltimorecity.gov/collectionupdate">DPW's Collection Updates site</a> `
                 setMessage(message)
             } else {
                 // user may not be in the City
                 setMessage(`Looks like you may not live in Baltimore City\nMaybe you should: <a href="https://livebaltimore.com/">LiveBaltimore</a>`)
             }
-
         }
 
         function addDays(date, days) {
@@ -141,7 +124,32 @@ let CheckRecyclingWeek = {
             return recycling_week
         }
 
+        function checkForRemember() {
+            // check for the users remembered address
+            const rmCheck = document.getElementById("rememberMe")
+            const addressInput = document.getElementById("addressEntry")
+            if (localStorage.address && localStorage.address !== "") {
+                rmCheck.setAttribute("checked", "checked")
+                address.value = localStorage.address
+            } else {
+                rmCheck.removeAttribute("checked")
+                addressInput.value = ""
+            }
+        }
+
+        function lsRememberMe(){
+            // use localstorage to remember the users information
+            const rmCheck = document.getElementById("rememberMe")
+            if (rmCheck.checked && rmCheck.value !== ""){
+                localStorage.address = address.value
+                localStorage.checkbox = rmCheck.value
+            } else {
+                localStorage.address = ""
+                localStorage.checked = ""
+            }
+        }
         function setMessage(new_message){
+            // helper to update the message box
             message.value = new_message
             document.getElementById("message").focus()
             document.getElementById("message").hidden = false
@@ -151,7 +159,12 @@ let CheckRecyclingWeek = {
         return {
             address,
             message,
-            checkRecylingWeek
+            checkRecylingWeek,
+            lsRememberMe,
+            checkForRemember
         }
+    },
+    mounted(){
+        this.checkForRemember()
     }
 }

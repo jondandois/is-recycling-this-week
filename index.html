@@ -9,7 +9,6 @@
     <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
     <script src='https://unpkg.com/vue@3'></script>
     <script src='./check-recycling-week.js'></script>
-    <!-- <script src='./sample-data.js'></script> -->
 </head>
 <body>
     <script>
@@ -17,9 +16,9 @@
             .then(response => response.json())
             .then(json => {
                 recylingData = json
-                console.log("got vue:", Vue)
                 Vue.createApp(CheckRecyclingWeek).mount("#app")
                 document.getElementById("addressEntry").focus()
+                
             })
     </script>
 
@@ -28,11 +27,19 @@
         <h2>Find out if it's your Recycling Week in Baltimore City</h2>
         <div>
             <input id="addressEntry" autofocus placeholder="Enter address" aria-label="Enter address" v-model="address" @keyup.enter="checkRecylingWeek"></input>
-            <button :disabled="address === '' || address.length < 6" @click="checkRecylingWeek">Is recyling this week?</button>
+            <button id="checkWeekButton" :disabled="address === '' || address.length < 6" @click="checkRecylingWeek">Is recyling this week?</button>
+        </div>
+        <div>
+            <input type="checkbox" value="lsRememberMe" id="rememberMe" @click="lsRememberMe"><label for="rememberMe">Remember Me</label>
         </div>
         <pre id="message" class="message" hidden><span v-html="message"></span></pre>
         <br/>
-        <div id="footer"></div>
+        <div id="footer" class="footer">
+            <div>Made with 💕 for my neighbors in Baltimore</div>
+            <div>View this project's source <a target="_blank" href="https://github.com/jondandois/is-recycling-this-week">@jondandois</a></div>
+            <div>I am not affiliated with Baltimore City DPW</div>
+
+        </div>
     </div>
 
 
