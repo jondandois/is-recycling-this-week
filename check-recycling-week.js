@@ -29,6 +29,7 @@ let CheckRecyclingWeek = {
                 payload.SingleLine = address.value
                 let params = new URLSearchParams(payload)
                 let url = geocoderURL + "?" + params.toString()
+
                 fetch(url)
                     .then(response => response.json())
                     .then(data => parseCandidates(data))
@@ -110,7 +111,7 @@ let CheckRecyclingWeek = {
         function nextRecyclingWeek(today, weekInit) {
             // get the next recycling block relative to today for a week
             let recycling_week = {
-                "this_week": false, 
+                "this_week": false,
                 "dates": {}
             }
            recycling_week.dates = updateDaterange(today, weekInit, 14)
